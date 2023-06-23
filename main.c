@@ -1,10 +1,11 @@
 #include "monty.h"
-#include <stdio.h>
-
-ssize_t getline(char **lineptr, size_t *n, FILE *stream);
-
 bus_t bus = {NULL, NULL, NULL, 0};
-
+/**
+* main - monty code interpreter
+* @argc: number of arguments
+* @argv: monty file location
+* Return: 0 on success
+*/
 int main(int argc, char *argv[])
 {
 	char *content;
@@ -19,7 +20,6 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
-
 	file = fopen(argv[1], "r");
 	bus.file = file;
 	if (!file)
@@ -27,40 +27,19 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
 		exit(EXIT_FAILURE);
 	}
-
 	while (read_line > 0)
 	{
 		content = NULL;
 		read_line = getline(&content, &size, file);
 		bus.content = content;
 		counter++;
-
 		if (read_line > 0)
 		{
 			execute(content, &stack, counter, file);
 		}
-
 		free(content);
 	}
-
 	free_stack(stack);
 	fclose(file);
-	return (0);
-}
-
-ssize_t getline(char **lineptr, size_t *n, FILE *stream)
-{
-	ssize_t read;
-	if ((*lineptr == NULL) || (*n == 0))
-	{
-		*n = 128;
-		*lineptr = malloc(*n);
-		if (*lineptr == NULL)
-		{
-			return (-1);
-		}
-	}
-
-	read = getline(lineptr, n, stream);
-	return (read);
+return (0);
 }
